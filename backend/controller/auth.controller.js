@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import Bcrypt from "bcrypt";
 import { generateJsonWebToken } from "../utils/generateJsonWebToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   const body = req.body;
@@ -108,7 +109,45 @@ export const signin = async (req, res) => {
   }
 };
 
-export const deleteAccount = async (req, res) => {};
+export const deleteAccount = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({
+        status: "fail",
+        message: "Unauthorized: no token provided",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const userId = decoded.id;
+
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Your Account has been deleted successfully.",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error ${err.message}`,
+    });
+  }
+};
 
 export const userDetails = async (req, res) => {};
 
