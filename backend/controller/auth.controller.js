@@ -186,6 +186,26 @@ export const userDetails = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({
+      status: "fail",
+      message: "Unauthorized: token not provided",
+    });
+  }
+
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  return res.status(200).json({
+    status: "success",
+    message: "Logged Out Successfully",
+  });
+};
 
 export const authentication = async (req, res) => {};
