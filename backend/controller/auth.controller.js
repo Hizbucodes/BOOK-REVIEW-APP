@@ -32,7 +32,7 @@ export const signup = async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    const token = generateJsonWebToken({
+    const token = generateJsonWebToken(res, {
       id: savedUser._id,
       firstName: savedUser.firstName,
       lastName: savedUser.lastName,
@@ -88,7 +88,7 @@ export const signin = async (req, res) => {
       });
     }
 
-    const token = generateJsonWebToken({
+    const token = generateJsonWebToken(res, {
       id: result._id,
       firstName: result.firstName,
       lastName: result.lastName,
@@ -111,5 +111,7 @@ export const signin = async (req, res) => {
 export const deleteAccount = async (req, res) => {};
 
 export const userDetails = async (req, res) => {};
+
+export const logout = async (req, res) => {};
 
 export const authentication = async (req, res) => {};
