@@ -13,6 +13,6 @@ router.route("/signup").post(signup);
 router.route("/signin").post(signin);
 router.route("/logout").post(logout);
 router.route("/deleteAccount").post(deleteAccount);
-router.route("/userDetails").post(userDetails);
+router.route("/userDetails").get(userDetails);
 
 export default router;

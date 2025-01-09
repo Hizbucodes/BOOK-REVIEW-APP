@@ -149,7 +149,42 @@ export const deleteAccount = async (req, res) => {
   }
 };
 
-export const userDetails = async (req, res) => {};
+export const userDetails = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({
+        status: "fail",
+        message: "Unauthorized: token not provided",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const loggedInUser = await User.findById(decoded.id);
+
+    if (!loggedInUser) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      user: {
+        id: loggedInUser.id,
+        firstName: loggedInUser.firstName,
+        lastName: loggedInUser.lastName,
+        email: loggedInUser.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error ${error.message}`,
+    });
+  }
+};
 
 export const logout = async (req, res) => {};
 
