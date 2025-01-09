@@ -94,6 +94,7 @@ export const signin = async (req, res) => {
       firstName: result.firstName,
       lastName: result.lastName,
       email: result.email,
+      userRole: result.userRole,
     });
 
     return res.status(200).json({
@@ -222,6 +223,7 @@ export const authentication = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     req.id = decoded.id;
+    req.userRole = decoded.userRole;
 
     return next();
   } catch (error) {
@@ -230,4 +232,19 @@ export const authentication = async (req, res, next) => {
       message: `Internal Server Error ${error.message}`,
     });
   }
+};
+
+export const authorization = (...userRoles) => {
+  const checkPermission = async (req, res, next) => {
+    console.log("USER ROLE: ", userRoles.includes(req.userRole));
+    if (!userRoles.includes(req.userRole)) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You don't have permission to perform this action",
+      });
+    }
+    return next();
+  };
+
+  return checkPermission;
 };
