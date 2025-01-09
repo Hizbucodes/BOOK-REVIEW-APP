@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.route("/signup").post(signup);
-router.route("signin").post(signin);
+router.route("/signin").post(signin);
 router.route("/deleteAccount").post(deleteAccount);
 router.route("/userDetails").post(userDetails);
 

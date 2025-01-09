@@ -68,7 +68,45 @@ export const signup = async (req, res) => {
   }
 };
 
-export const signin = async (req, res) => {};
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const result = await User.findOne({ email });
+
+    if (!email || !password) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Please provide email and password",
+      });
+    }
+
+    if (!result || !(await Bcrypt.compare(password, result.password))) {
+      return res.status(400).json({
+        status: "fail",
+        message: "Email or Password is Incorrect",
+      });
+    }
+
+    const token = generateJsonWebToken({
+      id: result._id,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      email: result.email,
+    });
+
+    return res.status(200).json({
+      sttaus: "success",
+      messsage: "Successfully logged in",
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error ${error.message}`,
+    });
+  }
+};
 
 export const deleteAccount = async (req, res) => {};
 
