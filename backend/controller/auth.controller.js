@@ -208,4 +208,26 @@ export const logout = async (req, res) => {
   });
 };
 
-export const authentication = async (req, res) => {};
+export const authentication = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        status: "fail",
+        message: "Unauthorized: token not provided",
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    req.id = decoded.id;
+
+    return next();
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error ${error.message}`,
+    });
+  }
+};
