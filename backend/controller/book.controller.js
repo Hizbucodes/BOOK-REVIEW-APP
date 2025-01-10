@@ -49,6 +49,52 @@ export const getAllBooks = async (req, res) => {
   }
 };
 
-export const updateBook = async (req, res) => {};
+export const updateBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userID = req.id;
+    const body = req.body;
+
+    const book = await Book.findById(id);
+
+    if (!book) {
+      return res.status(404).json({
+        status: "fail",
+        messsage: "Requested Book Not Found",
+      });
+    }
+
+    if (book.createdBy.toString() !== userID) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You are not authorized to update this book",
+      });
+    }
+
+    const updatedBook = await Book.findByIdAndUpdate(
+      id,
+      {
+        title: body.title,
+        author: body.author,
+        genre: body.genre,
+        description: body.description,
+      },
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).json({
+      status: "success",
+      message: "Book updated successfully",
+      data: updatedBook,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error: ${error.message}`,
+    });
+  }
+};
 
 export const deleteBook = async (req, res) => {};
