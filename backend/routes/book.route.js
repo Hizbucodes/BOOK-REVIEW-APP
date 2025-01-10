@@ -19,6 +19,8 @@ router.route("/getAllBooks").get(getAllBooks);
 router
   .route("/updateBook/:id")
   .patch(authentication, authorization("user"), updateBook);
-router.route("/deleteBook/:id").delete(deleteBook);
+router
+  .route("/deleteBook/:id")
+  .delete(authentication, authorization("user"), deleteBook);
 
 export default router;

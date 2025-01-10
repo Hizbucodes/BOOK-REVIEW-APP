@@ -97,4 +97,30 @@ export const updateBook = async (req, res) => {
   }
 };
 
-export const deleteBook = async (req, res) => {};
+export const deleteBook = async (req, res) => {
+  const { id } = req.params;
+  const userID = req.id;
+
+  const book = await Book.findById(id);
+
+  if (!book) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Requested book not found",
+    });
+  }
+
+  if (book.createdBy.toString() !== userID) {
+    return res.status(403).json({
+      status: "fail",
+      message: "You are not authorized to update this book",
+    });
+  }
+
+  await Book.findByIdAndDelete(id);
+
+  return res.status(200).json({
+    status: "success",
+    message: "book deleted successfully",
+  });
+};
