@@ -26,7 +26,28 @@ export const createBook = async (req, res) => {
   });
 };
 
-export const getAllBooks = async (req, res) => {};
+export const getAllBooks = async (req, res) => {
+  try {
+    const books = await Book.find({});
+
+    if (books.length === 0) {
+      return res.status(204).json({
+        status: "success",
+        message: "No Books were added yet",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      data: books,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error: ${error.message}`,
+    });
+  }
+};
 
 export const updateBook = async (req, res) => {};
 
