@@ -49,7 +49,40 @@ export const addReview = async (req, res) => {
   }
 };
 
-export const deleteReview = async (req, res) => {};
+export const deleteReview = async (req, res) => {
+  try {
+    const userID = req.id;
+    const { reviewId } = req.params;
+
+    const isReviewExist = await Review.findById(reviewId);
+
+    if (!isReviewExist) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Review not found",
+      });
+    }
+
+    if (isReviewExist.user.toString() !== userID) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You are not authorized to delete this review",
+      });
+    }
+
+    await Review.findByIdAndDelete(reviewId);
+
+    return res.status(200).json({
+      status: "success",
+      message: "Review deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error: ${error.message}`,
+    });
+  }
+};
 
 export const updateReview = async (req, res) => {};
 

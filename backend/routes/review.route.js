@@ -16,7 +16,7 @@ router
   .route("/addReview/:bookId")
   .post(authentication, authorization("user"), addReview);
 router
-  .route("/deleteReview/:id")
+  .route("/deleteReview/:reviewId")
   .delete(authentication, authorization("user"), deleteReview);
 router
   .route("/updateReview/:id")
