@@ -22,7 +22,7 @@ router
   .route("/updateReview/:reviewId")
   .patch(authentication, authorization("user"), updateReview);
 router
-  .route("/getAllReviews/:reviewId")
+  .route("/getAllReviews/:bookId")
   .get(authentication, authorization("admin"), getAllReviewsForABook);
 
 export default router;
