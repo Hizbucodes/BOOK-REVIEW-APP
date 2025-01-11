@@ -124,4 +124,29 @@ export const updateReview = async (req, res) => {
   }
 };
 
-export const getAllReviewsForABook = async (req, res) => {};
+export const getAllReviewsForABook = async (req, res) => {
+  try {
+    const { bookId } = req.params;
+
+    const reviews = await Review.find({ book: bookId })
+      .populate("user", "firstName lastName")
+      .populate("book", "title author");
+
+    if (reviews.length === 0) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No reviews found this for book",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      data: reviews,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      message: `Internal Server Error: ${error.message}`,
+    });
+  }
+};
