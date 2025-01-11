@@ -19,10 +19,10 @@ router
   .route("/deleteReview/:reviewId")
   .delete(authentication, authorization("user"), deleteReview);
 router
-  .route("/updateReview/:id")
-  .put(authentication, authorization("user"), updateReview);
+  .route("/updateReview/:reviewId")
+  .patch(authentication, authorization("user"), updateReview);
 router
-  .route("/getAllReviews/:id")
+  .route("/getAllReviews/:reviewId")
   .get(authentication, authorization("admin"), getAllReviewsForABook);
 
 export default router;
