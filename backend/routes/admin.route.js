@@ -19,7 +19,7 @@ router
   .route("/getAllBooks")
   .get(authentication, authorization("admin"), getAllBooks);
 router
-  .route("/deleteABook")
+  .route("/deleteABook/:bookId")
   .delete(authentication, authorization("admin"), deleteABook);
 
 export default router;
