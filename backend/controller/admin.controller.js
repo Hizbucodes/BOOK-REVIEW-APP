@@ -25,6 +25,28 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getAllBooks = async (req, res) => {};
+export const getAllBooks = async (req, res) => {
+  try {
+    const books = await Book.find({});
+
+    if (!books) {
+      return res.status(404).json({
+        status: "fail",
+        message: "No books found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Successfully fetched all books",
+      data: books,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "fail",
+      messsage: `Internal Server Error: ${error.messsage}`,
+    });
+  }
+};
 
 export const deleteABook = async (req, res) => {};
