@@ -7,11 +7,14 @@ import bookRouter from "./routes/book.route.js";
 import reviewRouter from "./routes/review.route.js";
 import adminRouter from "./routes/admin.route.js";
 
+import cors from "cors";
+
 import cookieParser from "cookie-parser";
 
 dotenv.config();
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
